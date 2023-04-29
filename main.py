@@ -8,6 +8,8 @@ from fastapi.templating import Jinja2Templates
 
 from fastapi.responses import HTMLResponse
 
+from config import settings
+
 app = FastAPI()
 
 templates = Jinja2Templates(directory='./')

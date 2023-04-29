@@ -1,14 +1,11 @@
+import time 
 import torch
 import torch.nn as nn
 
 from models import mobilenet, cmu
 
-if __name__ == "__main__":
-
-    import time 
-    
+if __name__ == "__main__":    
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-#    device = torch.device("cpu")
     input = torch.Tensor(2, 3, 368, 368).to(device)
 
     model_CMU = cmu.bodypose_model().to(device)

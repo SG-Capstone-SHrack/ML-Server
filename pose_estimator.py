@@ -2,10 +2,6 @@ import os
 import numpy as np
 import torch
 import torch.nn as nn
-<<<<<<< HEAD
-
-
-=======
 from config import settings
 from models import mobilenet, cmu
 
@@ -25,4 +21,3 @@ def model_inference(model, input, settings):
     multiplier = [x * box_size / input.shape[0] for x in scale_search]
     heatmap_avg = np.zeros((input.shape[0], input.shape[1], 19))
     paf_avg = np.zeros((input.shape[0], input.shape[1], 38))
->>>>>>> parent of 1327587 (230429 21:47 Minseok)

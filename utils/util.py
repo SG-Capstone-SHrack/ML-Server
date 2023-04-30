@@ -4,6 +4,11 @@ import math
 from scipy.ndimage.filters import gaussian_filter
 
 
+################### Mobilenet ########################
+
+# reference: https://github.com/xuexingyu24/Real-time-human-pose-estimation-by-pytorch/blob/master/model.py
+
+
 def padRightDownCorner(img, stride, padValue):
 
      h = img.shape[0]

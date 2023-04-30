@@ -31,10 +31,10 @@ async def upload_image(file: UploadFile = File(...)):
     file_name = datetime.datetime.now().strftime("%y%m%d_%H%M%S") + "1"
 
     # rename it by adding a number if there is already a file with the same name
-    while os.path.exists(os.path.join(settings.image_dir, file_name)):
+    while os.path.exists(os.path.join(settings.storage_root, file_name)):
         file_name = datetime.datetime.now().strftime("%y%m%d_%H%M%S") + str(int(file_name[-1]) + 1)
 
-    file_path = os.path.join(settings.image_dir, file_name)
+    file_path = os.path.join(settings.storage_root, file_name)
     
     with open(file_path, "wb") as buffer:
         content = await file.read()
@@ -58,10 +58,10 @@ async def upload_images(files: list = File(...)):
         file_name = datetime.datetime.now().strftime("%y%m%d_%H%M%S") + "1"
 
         # rename it by adding a number if there is already a file with the same name
-        while os.path.exists(os.path.join(settings.image_dir, file_name)):
+        while os.path.exists(os.path.join(settings.storage_root, file_name)):
             file_name = datetime.datetime.now().strftime("%y%m%d_%H%M%S") + str(int(file_name[-1]) + 1)
 
-        file_path = os.path.join(settings.image_dir, file_name)
+        file_path = os.path.join(settings.storage_root, file_name)
 
         # extension with jpg by default if there is no extension
         if not file_path.endswith(".jpg"):

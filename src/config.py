@@ -10,5 +10,6 @@ class Settings(BaseSettings):
     padding_value = 128
     threshold1: float = 0.1
     threshold2: float = 0.05
+    window_size: int = 10
 
 settings = Settings()

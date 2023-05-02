@@ -216,9 +216,10 @@ def draw_bodypose(canvas, candidate, subset, scale=1):
     return canvas
 
 def draw_part(canvas, all_peaks, ID, scale=1):
-    dotwidth = 8
+    dotwidth = 5
     for i in range(len(ID)):
         for j in range(len(all_peaks[ID[i]])):
             cv2.circle(canvas, (int(all_peaks[ID[i]][j][0]/scale), int(all_peaks[ID[i]][j][1]/scale)), int(dotwidth), (0,0,255), thickness=-1)
+            print("({}, {})".format(int(all_peaks[ID[i]][j][0]/scale), int(all_peaks[ID[i]][j][1]/scale)))
 
     return canvas 

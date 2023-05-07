@@ -17,7 +17,6 @@ def Net_Prediction(model, image, device, backbone = 'Mobilenet'):
     scale_search = [1]
     stride = 8
     padValue = 128
-    print(image.shape)
     heatmap_avg = np.zeros((image.shape[0], image.shape[1], 19))
     paf_avg = np.zeros((image.shape[0], image.shape[1], 38))
     
@@ -47,13 +46,13 @@ def Net_Prediction(model, image, device, backbone = 'Mobilenet'):
         heatmap = cv2.resize(heatmap, (0, 0), fx=stride, fy=stride, interpolation=cv2.INTER_CUBIC)
         heatmap = heatmap[:imageToTest_padded.shape[0] - pad[2], :imageToTest_padded.shape[1] - pad[3], :]
         heatmap = cv2.resize(heatmap, (image.shape[1], image.shape[0]), interpolation=cv2.INTER_CUBIC)
-        print(heatmap.shape)
+        # print(heatmap.shape)
         
         paf = np.transpose(np.squeeze(_paf), (1, 2, 0))  # output 0 is PAFs
         paf = cv2.resize(paf, (0, 0), fx=stride, fy=stride, interpolation=cv2.INTER_CUBIC)
         paf = paf[:imageToTest_padded.shape[0] - pad[2], :imageToTest_padded.shape[1] - pad[3], :]
         paf = cv2.resize(paf, (image.shape[1], image.shape[0]), interpolation=cv2.INTER_CUBIC)
-        print(paf.shape)
+        # print(paf.shape)
         
         heatmap_avg += heatmap / len(scale_search)
         paf_avg += paf / len(scale_search)
@@ -72,7 +71,16 @@ def model_load(model_path, device):
 def model_inference(input, settings, exercise_type):
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     scale = 1
-    show = [8, 9, 10, 11, 12, 13]
+    # if exercise_type == "squat-left-leg":
+    #     show = [11, 12, 13]
+    # elif exercise_type == "squat-right-leg":
+    #     show = [8, 9, 10]
+    # elif exercise_type == "pushup-left-arm":
+    #     show = [5, 6, 7]
+    # elif exercise_type == "pushup-right-arm":
+    #     show = [2, 3, 4]
+    # else:
+    #     show = -1
     model = model_load('./weights/MobileNet_bodypose_model', device)
 
     # load image
@@ -89,24 +97,20 @@ def model_inference(input, settings, exercise_type):
     t2 = time.time()
     print("Find peaks in {:2.3f} seconds".format(t2 - t1))
 
-    if show == -1:
-        connection_all, special_k = connection(all_peaks, paf, image_to_test)
+    #canvas = draw_part_angle(image, all_peaks, show, scale)
+    connection_all, special_k = connection(all_peaks, paf, image_to_test)
+    t2 = time.time()
+    print("Find connections in {:2.3f} seconds".format(t2 - t1))
+    candidate, subset = merge(all_peaks, connection_all, special_k)
+    t3 = time.time()
+    print("Merge in {:2.3f} seconds".format(t3 - t2))
 
-        t2 = time.time()
-        print("Find connections in {:2.3f} seconds".format(t2 - t1))
+    angle_btw, canvas = draw_bodypose(image, candidate, subset, exercise_type, scale)
 
-        candidate, subset = merge(all_peaks, connection_all, special_k)
 
-        t3 = time.time()
-        print("Merge in {:2.3f} seconds".format(t3 - t2))
-
-        canvas = draw_bodypose(image, candidate, subset, scale)
-
-    else:
-        canvas = draw_part(image, all_peaks, show, scale)
 
     print("Total inference in {:2.3f} seconds".format(time.time() - since))
-
+    print("Angle_btw: {:2.3f}".format(angle_btw))
     plt.imshow(canvas[:,:, [2,1,0]])
     plt.axis('off')
     plt.savefig('inferenced_test.jpg')
@@ -114,11 +118,11 @@ def model_inference(input, settings, exercise_type):
     return
 
 if __name__ == '__main__':
-    image_path = './images/squat-jump-squat.jpg'
+    image_path = './images/pushup2_down.jpg'
     image = cv2.imread(image_path)
     settings = 0
 
-    model_inference(image, settings, 'squat')
+    model_inference(image, settings, "pushup-left-arm")
     print("draw_part() 함수의 좌표값 사용해서 각도 계산하는거부터 해야함")
 
 

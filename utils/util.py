@@ -107,6 +107,7 @@ def connection(all_peaks, paf, image):
                         break
             # record all connectin info as peak id of part indexA, peak id of part indexB, total score, ith, jth
             connection_all.append(connection)
+            
 
         else:
             # if nA or nB is empty record that connection case 
@@ -178,12 +179,15 @@ def merge(all_peaks, connection_all, special_k):
     # subset: n*20 array, 0-17 is the index in candidate, 18 is the total score, 19 is the total parts, n is the number of person 
     subset = np.delete(subset, deleteIdx, axis=0)
 
+
     return candidate, subset
 
 
-def draw_bodypose(canvas, candidate, subset, scale=1):
+def draw_bodypose(canvas, candidate, subset, exercise_type, scale=1):
     stickwidth = 2
     dotwidth = 2
+    angle1 = 0
+    angle2 = 0
     limbSeq = [[2, 3], [2, 6], [3, 4], [4, 5], [6, 7], [7, 8], [2, 9], [9, 10], \
             [10, 11], [2, 12], [12, 13], [13, 14], [2, 1], [1, 15], [15, 17], \
             [1, 16], [16, 18], [3, 17], [6, 18]]
@@ -210,12 +214,55 @@ def draw_bodypose(canvas, candidate, subset, scale=1):
             mY = np.mean(Y)
             length = ((X[0] - X[1]) ** 2 + (Y[0] - Y[1]) ** 2) ** 0.5
             angle = math.degrees(math.atan2(X[0] - X[1], Y[0] - Y[1]))
+            if exercise_type == "squat-right-leg":
+                if i==7:
+                    angle1 = angle
+                if i==8:
+                    angle2 = angle
+                    angle_btw = (angle1 + 180) + (angle2 * (-1))
+                    if angle_btw > 180:
+                        angle_btw = 360 - angle_btw
+                    # print(angle_btw)
+            elif exercise_type == "squat-left-leg":
+                if i==10:
+                    angle3 = angle
+                if i==11:
+                    angle4 = angle
+                    angle_btw = (angle4 + 180) + (angle3 * (-1))
+                    if angle_btw > 180:
+                        angle_btw = 360 - angle_btw
+                    # print(angle_btw)
+            elif exercise_type == "pushup-right-arm":
+                if i==2:
+                    angle5 = angle
+                if i==3:
+                    angle6 = angle
+                    angle_btw = (angle5 + 180) + (angle6 * (-1))
+                    if angle_btw > 180:
+                        angle_btw = 360 - angle_btw
+                    # print(angle_btw)
+            elif exercise_type == "pushup-left-arm":
+                if i==4:
+                    angle7 = angle
+                if i==5:
+                    angle8 = angle
+                    angle_btw = (angle7 + 180) + (angle8 * (-1))
+                    if angle_btw > 180:
+                        angle_btw = 360 - angle_btw
+                    # print(angle_btw)
+            else:
+                angle_btw = 0
+            if i!=5:
+                colors[i] = [0,0,0]
+
+
             polygon = cv2.ellipse2Poly((int(mY), int(mX)), (int(length / 2), int(stickwidth)), int(angle), 0, 360, 1)
+
             cv2.fillConvexPoly(cur_canvas, polygon, colors[i])
             canvas = cv2.addWeighted(canvas, 0.4, cur_canvas, 0.6, 0)
-    return canvas
+    return angle_btw, canvas
 
-def draw_part(canvas, all_peaks, ID, scale=1):
+def draw_part_angle(canvas, all_peaks, ID, scale=1):
     dotwidth = 5
     for i in range(len(ID)):
         for j in range(len(all_peaks[ID[i]])):

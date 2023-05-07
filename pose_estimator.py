@@ -96,8 +96,6 @@ def model_inference(input, settings, exercise_type):
 
     angle_btw, canvas = draw_bodypose(image, candidate, subset, exercise_type, scale)
 
-
-
     print("Total inference in {:2.3f} seconds".format(time.time() - since))
     print("Angle_btw: {:2.3f}".format(angle_btw))
     plt.imshow(canvas[:,:, [2,1,0]])

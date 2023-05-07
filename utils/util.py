@@ -252,9 +252,6 @@ def draw_bodypose(canvas, candidate, subset, exercise_type, scale=1):
                     # print(angle_btw)
             else:
                 angle_btw = 0
-            if i!=5:
-                colors[i] = [0,0,0]
-
 
             polygon = cv2.ellipse2Poly((int(mY), int(mX)), (int(length / 2), int(stickwidth)), int(angle), 0, 360, 1)
 

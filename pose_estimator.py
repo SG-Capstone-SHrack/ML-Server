@@ -71,20 +71,9 @@ def model_load(model_path, device):
 def model_inference(input, settings, exercise_type):
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     scale = 1
-    # if exercise_type == "squat-left-leg":
-    #     show = [11, 12, 13]
-    # elif exercise_type == "squat-right-leg":
-    #     show = [8, 9, 10]
-    # elif exercise_type == "pushup-left-arm":
-    #     show = [5, 6, 7]
-    # elif exercise_type == "pushup-right-arm":
-    #     show = [2, 3, 4]
-    # else:
-    #     show = -1
     model = model_load('./weights/MobileNet_bodypose_model', device)
 
     # load image
-    # input = cv2.imread('./images/test.jpg')
     image_to_test = cv2.resize(input, (0,0), fx=scale, fy=scale, interpolation=cv2.INTER_CUBIC)
     since = time.time()
 
@@ -97,7 +86,7 @@ def model_inference(input, settings, exercise_type):
     t2 = time.time()
     print("Find peaks in {:2.3f} seconds".format(t2 - t1))
 
-    #canvas = draw_part_angle(image, all_peaks, show, scale)
+    #canvas = draw_part(image, all_peaks, show, scale)
     connection_all, special_k = connection(all_peaks, paf, image_to_test)
     t2 = time.time()
     print("Find connections in {:2.3f} seconds".format(t2 - t1))
@@ -123,7 +112,6 @@ if __name__ == '__main__':
     settings = 0
 
     model_inference(image, settings, "pushup-left-arm")
-    print("draw_part() 함수의 좌표값 사용해서 각도 계산하는거부터 해야함")
 
 
     # multiplier = [x * box_size / input.shape[0] for x in scale_search]

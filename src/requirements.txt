@@ -1,7 +1,7 @@
 altair==4.2.2
 anyio==3.6.2
 attrs==23.1.0
-backports.zoneinfo==0.2.1
+backports.zoneinfo==0.2.1;python_version<"3.9"
 blinker==1.6.2
 build==0.10.0
 CacheControl==0.12.11
@@ -41,6 +41,7 @@ msgpack==1.0.5
 networkx==3.1
 numpy==1.24.3
 opencv-python==4.7.0.72
+opencv-python-headless==4.5.1.48
 packaging==23.1
 pandas==2.0.1
 pexpect==4.8.0
@@ -63,6 +64,7 @@ Pympler==1.0.1
 pyproject_hooks==1.0.0
 pyrsistent==0.19.3
 python-dateutil==2.8.2
+python-multipart==0.0.5
 pytz==2023.3
 pytz-deprecation-shim==0.1.0.post0
 rapidfuzz==2.15.1

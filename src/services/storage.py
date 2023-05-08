@@ -14,11 +14,10 @@ from uuid import UUID
 from config import settings
 
 class StroageFile:
-    user_id: str
     user_files: dict
 
-    def __init__(self, user_id):
-        self.user_id = user_id
+    def __init__(self):
+        self.user_files = {}
 
     @classmethod
     def get_user_files(cls, user_id: str):

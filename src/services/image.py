@@ -1,5 +1,4 @@
 import os
-import cv2
 import math
 import datetime
 import numpy as np

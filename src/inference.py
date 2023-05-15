@@ -13,6 +13,7 @@ from uuid import UUID
 from PIL import Image
 
 from config import settings
+from services.record import records
 
 from pose_estimator import model_inference
 
@@ -22,10 +23,11 @@ router = APIRouter(
 )
 
 # get an image from client by POST
-@router.post("/image/{user_id}/{uuid}")
+@router.post("/image/{user_id}/{uuid}/{exercise_type}")
 async def inference_image(
     user_id: str,
     uuid: str,
+    exercise_type: str,
     file: UploadFile = File(...)):
     '''
     parameters:
@@ -36,8 +38,17 @@ async def inference_image(
 
     file_content = np.array(Image.open(file.file))
     
-    result = model_inference(file_content, settings, 'pushup-left-arm')
+    result = model_inference(file_content, settings, exercise_type)
     
-    print(result)
+    records.add_user_record(user_id, uuid, result)
+    user_records = records.get_user_records_by_uuid(user_id, uuid)
+    
+    print(user_records)
 
-    return result
+    return {
+        "user_id": user_id,
+        "uuid": uuid,
+        "exercise_type": exercise_type,
+        "angle": result, "user_records": user_records
+        }
+

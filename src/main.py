@@ -11,6 +11,7 @@ from fastapi.responses import HTMLResponse
 from config import settings
 from router import router
 
+
 app = FastAPI()
 
 templates = Jinja2Templates(directory='./')
@@ -28,5 +29,7 @@ app.add_middleware(
 # router
 app.include_router(router)
 
+
 if __name__ == "__main__":    
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    # device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    print("execution")

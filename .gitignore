@@ -1,0 +1,7 @@
+**/.ipynb_checkpoints/
+**/__pycache__/
+**/log/
+**/images/
+
+.gitmessage.txt
+__init__.py

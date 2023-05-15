@@ -10,7 +10,7 @@ from starlette.responses import RedirectResponse
 
 api_host = "http://0.0.0.0:8080"
 
-def upload_image(user_id, uuid, image):
+def upload_image(user_id, uuid, exercise_type, image):
     '''
     parameters:
         user_id: user id
@@ -20,25 +20,27 @@ def upload_image(user_id, uuid, image):
         file path
     '''
     
-    url = f"{api_host}/inference/image/{user_id}/{uuid}"
-
+    url = f"{api_host}/inference/image/{user_id}/{uuid}/{exercise_type}"
 
     files = {
         'file': image
-        }
+    }
 
     response = requests.post(
         url, 
         files=files
     )
-
-    return response.json
+    return response.json()
     
 
 
 st.title("Upload Image")
 user_id = st.text_input("Enter user ID")
 uuid = st.text_input("Enter UUID")
+exercise_type = st.selectbox(
+    'Select exercise type',
+    ('squat-right-leg', 'squat-left-leg', 'pushup-right-arm', 'pushup-left-arm')
+)
 upload_file = st.file_uploader("Upload Files", type=["jpg", "png"])
 
 if upload_file is not None:
@@ -50,5 +52,5 @@ if upload_file is not None:
     # image = image.convert("RGB")
     # image = image.resize((224, 224))
 
-    ret = upload_image(user_id, uuid, upload_file.getvalue())
+    ret = upload_image(user_id, uuid, exercise_type, upload_file.getvalue())
     st.write(ret)

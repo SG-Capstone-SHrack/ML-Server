@@ -9,6 +9,7 @@ import time
 # from config import settings
 from utils.util import *
 from models import mobilenet, cmu
+from config import model
 
 # box_size = settings.box_size
 # scale_search = settings.scale_search
@@ -59,19 +60,10 @@ def Net_Prediction(model, image, device, backbone = 'Mobilenet'):
         
     return heatmap_avg, paf_avg
 
-def model_load(model_path, device):
-    model = mobilenet.PoseEstimationWithMobileNet().to(device)
-    model.load_state_dict(torch.load(model_path))
-    model.eval()
-    print('Mobilenet Model is now successfully loaded...')
-
-    return model
-
 
 def model_inference(input, settings, exercise_type):
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     scale = 1
-    model = model_load('../weights/MobileNet_bodypose_model', device)
 
     # load image
     image_to_test = cv2.resize(input, (0,0), fx=scale, fy=scale, interpolation=cv2.INTER_CUBIC)

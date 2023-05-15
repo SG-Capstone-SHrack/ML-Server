@@ -71,7 +71,7 @@ def model_load(model_path, device):
 def model_inference(input, settings, exercise_type):
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     scale = 1
-    model = model_load('./weights/MobileNet_bodypose_model', device)
+    model = model_load('../weights/MobileNet_bodypose_model', device)
 
     # load image
     image_to_test = cv2.resize(input, (0,0), fx=scale, fy=scale, interpolation=cv2.INTER_CUBIC)

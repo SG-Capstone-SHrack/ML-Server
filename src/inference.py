@@ -13,21 +13,17 @@ from uuid import UUID
 from PIL import Image
 
 from config import settings
-from services.storage import *
+
+from pose_estimator import model_inference
 
 router = APIRouter(
-    prefix="/image",
+    prefix="/inference",
     responses={404: {"description": "Not found"}},
 )
 
-@router.get("/test")
-async def test():
-    print("Hello World!")
-    return {"test": "test"}
-
 # get an image from client by POST
-@router.post("/upload_image/{user_id}/{uuid}")
-async def upload_image(
+@router.post("/image/{user_id}/{uuid}")
+async def inference_image(
     user_id: str,
     uuid: str,
     file: UploadFile = File(...)):
@@ -40,25 +36,8 @@ async def upload_image(
 
     file_content = np.array(Image.open(file.file))
     
-    # return {"filename": file_name}
-
-
-# get lists of images from client by POST
-@router.post("/upload_images")
-async def upload_images(user_id: str, uuid: str, files: list = File(...)):
-    '''
-    parameters:
-        files: list of images
-    return:
-        list of file paths
-    '''
-
-    file_names = []
-
-    for file in files:
-        
-        file_name = save_image_file(user_id, uuid, file)
-        
-        file_names.append(file_name)
+    result = model_inference(file_content, settings, 'pushup-left-arm')
     
-    return {"filenames": file_names}
+    print(result)
+
+    return result

@@ -92,7 +92,7 @@ def get_stroage_file_path(user_id: str, file_name: str) -> str:
     return os.path.join(user_storage_path, file_name)
 
 
-def save_image_file(user_id: str, uuid: UUID, file_content: any) -> bool:
+def save_image_file(user_id: str, uuid: str, file_content: any) -> bool:
     '''
     save image file from client
 

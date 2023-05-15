@@ -71,7 +71,7 @@ def model_load(model_path, device):
 def model_inference(input, settings, exercise_type):
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     scale = 1
-    model = model_load('./weights/MobileNet_bodypose_model', device)
+    model = model_load('../weights/MobileNet_bodypose_model', device)
 
     # load image
     image_to_test = cv2.resize(input, (0,0), fx=scale, fy=scale, interpolation=cv2.INTER_CUBIC)
@@ -94,7 +94,7 @@ def model_inference(input, settings, exercise_type):
     t3 = time.time()
     print("Merge in {:2.3f} seconds".format(t3 - t2))
 
-    angle_btw, canvas = draw_bodypose(image, candidate, subset, exercise_type, scale)
+    angle_btw, canvas = draw_bodypose(image_to_test, candidate, subset, exercise_type, scale)
 
     print("Total inference in {:2.3f} seconds".format(time.time() - since))
     print("Angle_btw: {:2.3f}".format(angle_btw))
@@ -102,7 +102,7 @@ def model_inference(input, settings, exercise_type):
     plt.axis('off')
     plt.savefig('inferenced_test.jpg')
     
-    return
+    return angle_btw
 
 if __name__ == '__main__':
     image_path = './images/pushup2_down.jpg'

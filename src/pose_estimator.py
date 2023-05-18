@@ -9,7 +9,7 @@ import time
 # from config import settings
 from utils.util import *
 from models import mobilenet, cmu
-
+from utils.find_peaks_running import RealtimePeakDetector
 # box_size = settings.box_size
 # scale_search = settings.scale_search
 
@@ -68,10 +68,8 @@ def model_load(model_path, device):
     return model
 
 
-def model_inference(input, settings, exercise_type):
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+def model_inference(model, device, input, settings, exercise_type):
     scale = 1
-    model = model_load('../weights/MobileNet_bodypose_model', device)
 
     # load image
     image_to_test = cv2.resize(input, (0,0), fx=scale, fy=scale, interpolation=cv2.INTER_CUBIC)
@@ -94,22 +92,27 @@ def model_inference(input, settings, exercise_type):
     t3 = time.time()
     print("Merge in {:2.3f} seconds".format(t3 - t2))
 
-    angle_btw, canvas = draw_bodypose(image, candidate, subset, exercise_type, scale)
+    angle_btw = draw_bodypose(image, candidate, subset, exercise_type, scale)
 
     print("Total inference in {:2.3f} seconds".format(time.time() - since))
-    print("Angle_btw: {:2.3f}".format(angle_btw))
-    plt.imshow(canvas[:,:, [2,1,0]])
-    plt.axis('off')
-    plt.savefig('inferenced_test.jpg')
+    # plt.imshow(canvas[:,:, [2,1,0]])
+    # plt.axis('off')
+    # plt.savefig('inferenced_test.jpg')
     
-    return
+    return angle_btw
 
 if __name__ == '__main__':
-    image_path = './images/pushup2_down.jpg'
-    image = cv2.imread(image_path)
-    settings = 0
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    model = model_load('../weights/MobileNet_bodypose_model', device)
 
-    model_inference(image, settings, "pushup-left-arm")
+    for i in range(10):
+        image_path = './images/pushup_up.jpg'
+        image = cv2.imread(image_path)
+        settings = 0
+
+        angle = model_inference(model, device, image, settings, "pushup-right-arm")
+        print("Angle_btw: {:2.3f}".format(angle))
+
 
 
     # multiplier = [x * box_size / input.shape[0] for x in scale_search]

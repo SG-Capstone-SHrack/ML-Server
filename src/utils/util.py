@@ -258,11 +258,11 @@ def draw_bodypose(canvas, candidate, subset, exercise_type, scale=1):
             else:
                 angle_btw = 0
 
-            polygon = cv2.ellipse2Poly((int(mY), int(mX)), (int(length / 2), int(stickwidth)), int(angle), 0, 360, 1)
+            # polygon = cv2.ellipse2Poly((int(mY), int(mX)), (int(length / 2), int(stickwidth)), int(angle), 0, 360, 1)
 
-            cv2.fillConvexPoly(cur_canvas, polygon, colors[i])
-            canvas = cv2.addWeighted(canvas, 0.4, cur_canvas, 0.6, 0)
-    return angle_btw, canvas
+            # cv2.fillConvexPoly(cur_canvas, polygon, colors[i])
+            # canvas = cv2.addWeighted(canvas, 0.4, cur_canvas, 0.6, 0)
+    return angle_btw
 
 def draw_part(canvas, all_peaks, ID, scale=1):
     dotwidth = 5
